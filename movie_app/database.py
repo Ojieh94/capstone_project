@@ -4,10 +4,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-load_dotenv(dotenv_path='movie_app/.env')
+load_dotenv()
 
 
-SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL')
+SQLALCHEMY_DATABASE_URL = os.environ.get('DATABASE_URL')
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL
