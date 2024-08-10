@@ -98,8 +98,8 @@ class MovieCRUDService:
         return db.query(models.Movie).filter(models.Movie.id == movie_id).first()
 
     @staticmethod
-    def get_movie_by_title(db: Session, title: str):
-        return db.query(models.Movie).filter(models.Movie.title == title).all()
+    def get_movie_by_title(db: Session, title: str, offset: int = 0, limit: int = 10):
+        return db.query(models.Movie).filter(models.Movie.title == title).offset(offset).limit(limit).all()
 
     @staticmethod
     def get_movie_by_genre(db: Session, genre: str):
@@ -146,6 +146,15 @@ class RatingCRUDService:
         db.refresh(db_rating)
         return db_rating
 
+    @staticmethod
+    def get_aggregate_ratings(db: Session):
+        return db.query(
+            models.Movie.id,
+            models.Movie.title,
+            func.avg(models.Rating.rating_value).label('average_rating'),
+            func.count(models.Rating.id).label('rating_count')
+        ).outerjoin(models.Rating, models.Movie.id == models.Rating.movie_id).group_by(models.Movie.id).all()
+    
     @staticmethod
     def get_ratings(db: Session, offset: int = 0, limit: int = 10):
         return db.query(models.Rating).offset(offset).limit(limit).all()

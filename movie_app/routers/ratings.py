@@ -44,6 +44,10 @@ async def get_ratings_by_movie_id(movie_id: int, db: Session = Depends(get_db), 
     )
     return ratings
 
+@rating_router.get("/movies/ratings")
+def read_movie_ratings(db: Session = Depends(get_db)):
+    result = rating_crud_service.get_aggregate_ratings(db)
+    return result
 
 @rating_router.post('/', status_code=201, response_model=schemas.Rating)
 async def rate_movie(rating: schemas.RatingCreate, current_user: schemas.User = Depends(get_current_user), db: Session = Depends(get_db)):
