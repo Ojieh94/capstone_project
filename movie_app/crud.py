@@ -102,8 +102,8 @@ class MovieCRUDService:
         return db.query(models.Movie).filter(models.Movie.title == title).offset(offset).limit(limit).all()
 
     @staticmethod
-    def get_movie_by_genre(db: Session, genre: str):
-        return db.query(models.Movie).filter(models.Movie.genre == genre).all()
+    def get_movie_by_genre(db: Session, genre: str, offset: int = 0, limit: int = 10):
+        return db.query(models.Movie).filter(models.Movie.genre == genre).offset(offset).limit(limit).all()
 
     @staticmethod
     def update_movie(db: Session, movie_payload: schemas.MovieUpdate, movie_id: int):

@@ -31,8 +31,8 @@ async def get_movie_by_id(movie_id: str, db: Session = Depends(get_db)):
 
 
 @movie_router.get("/genre/{genre}", status_code=200, response_model=List[schemas.Movie])
-async def get_movie_by_genre(genre: str, db: Session = Depends(get_db)):
-    movie = movie_crud_service.get_movie_by_genre(db, genre)
+async def get_movie_by_genre(genre: str, db: Session = Depends(get_db), offset: int = 0, limit: int = 10):
+    movie = movie_crud_service.get_movie_by_genre(db, genre, offset, limit)
     if not movie:
         raise HTTPException(detail="Movie not found",
                             status_code=status.HTTP_404_NOT_FOUND)
@@ -40,8 +40,8 @@ async def get_movie_by_genre(genre: str, db: Session = Depends(get_db)):
 
 
 @movie_router.get("/title/{movie_title}", status_code=200, response_model=List[schemas.Movie])
-async def get_movie_by_title(movie_title: str, db: Session = Depends(get_db)):
-    movie = movie_crud_service.get_movie_by_title(db, movie_title)
+async def get_movie_by_title(movie_title: str, db: Session = Depends(get_db), offset: int = 0, limit: int = 10):
+    movie = movie_crud_service.get_movie_by_title(db, movie_title, offset, limit)
     if not movie:
         logger.info("Getting movie with wrong title...")
         raise HTTPException(detail="Movie not found",
