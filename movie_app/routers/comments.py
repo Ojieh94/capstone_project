@@ -63,12 +63,13 @@ async def get_comments_by_movie(movie_id: int, db: Session = Depends(get_db), of
 
 
 @comment_router.get("/user/{user_id}", status_code=200, response_model=List[schemas.Comment])
-async def get_comment_by_user(user_id: int, db: Session = Depends(get_db)):
+async def get_comments_by_user(user_id: int, db: Session = Depends(get_db), offset: int = 0, limit: int = 10):
     user = user_crud_service.get_user_by_id(db, user_id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-    comment = comment_crud_service.get_comment_by_user(db, user_id)
+    comment = comment_crud_service.get_comments_by_user(
+        db, user_id, offset=offset, limit=limit)
     if not comment:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="No comments for user")

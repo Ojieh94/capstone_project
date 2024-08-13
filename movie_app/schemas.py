@@ -61,7 +61,7 @@ class RatingBase(BaseModel):
 
 
 class RatingCreate(RatingBase):
-    movie_id: int
+    pass
 
 
 class RatingUpdate(RatingBase):

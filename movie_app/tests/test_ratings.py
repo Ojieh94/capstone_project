@@ -111,6 +111,21 @@ def test_get_rating_by_movie_id(client, setup_database, movie_id, wrong_id, expe
     assert response.status_code == 200
     data = response.json()
     assert data["rating_value"] == expected_rating_value
+
+
+@pytest.mark.parametrize("movie_id, wrong_id, expected_avg_rating", [(1, 99, 8)])
+def test_get_movie_avg_rating(client, setup_database, movie_id, wrong_id, expected_avg_rating):
+    # Assert for invalid id
+    response = client.get(f"/movies/ratings//average_rating/{wrong_id}")
+    assert response.status_code == 404
+
+    response = client.get(f"/movies/ratings/average_rating/{movie_id}")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["message"] == "successful"
+    assert data["data"]["avg_rating"] == expected_avg_rating
+    assert data["data"]["movie_id"] == movie_id
     
 
 @pytest.mark.parametrize("rating_id, wrong_id, payload, expected_rating", [

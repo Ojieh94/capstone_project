@@ -44,14 +44,34 @@ async def get_ratings_by_movie_id(movie_id: int, db: Session = Depends(get_db), 
     )
     return ratings
 
-@rating_router.get("/movies/ratings")
-def read_movie_ratings(db: Session = Depends(get_db)):
-    result = rating_crud_service.get_aggregate_ratings(db)
-    return result
+@rating_router.get("/average_rating/{movie_id}", status_code=200)
+async def get_movie_avg_rating(movie_id: int, db: Session = Depends(get_db)):
+    movie = movie_crud_service.get_movie_by_id(db, movie_id)
+    if not movie:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Movie not found")
+    avg_rating = rating_crud_service.aggregate_rating(db, movie_id)
+    data = {
+        "movie_id": movie.id,
+        "movie_title": movie.title,
+        "owner_id": movie.user_id,
+        "avg_rating": avg_rating
+    }
 
-@rating_router.post('/', status_code=201, response_model=schemas.Rating)
-async def rate_movie(rating: schemas.RatingCreate, current_user: schemas.User = Depends(get_current_user), db: Session = Depends(get_db)):
-    db_rating = rating_crud_service.get_rating(db, user_id=current_user.id, movie_id=rating.movie_id)
+    return {"message": "successful", "data": data}
+
+    
+    
+
+@rating_router.post('/{movie_id}', status_code=201, response_model=schemas.Rating)
+async def rate_movie(movie_id: int, rating: schemas.RatingCreate, current_user: schemas.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    movie = movie_crud_service.get_movie_by_id(db, movie_id)
+    if not movie:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Movie not found")
+    # Query to see if there is an existing rating
+
+    db_rating = rating_crud_service.get_rating(db, user_id=current_user.id, movie_id=movie_id)
+    
     # Check if user has already rated movie
     if db_rating is not None:
         logger.warning("User trying to rate an already rated movie...")
@@ -60,7 +80,8 @@ async def rate_movie(rating: schemas.RatingCreate, current_user: schemas.User = 
     new_rating = rating_crud_service.rate_movie_by_id(
         db,
         rating=rating,
-        user_id=current_user.id
+        user_id=current_user.id,
+        movie_id=movie_id
     )
     return new_rating
 

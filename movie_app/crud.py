@@ -1,3 +1,5 @@
+from math import floor
+import statistics
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 import movie_app.models as models
@@ -135,10 +137,11 @@ class MovieCRUDService:
 class RatingCRUDService:
 
     @staticmethod
-    def rate_movie_by_id(db: Session, rating: schemas.RatingCreate, user_id: int):
+    def rate_movie_by_id(db: Session, rating: schemas.RatingCreate, user_id: int, movie_id: int):
         db_rating = models.Rating(
             **rating.model_dump(),
-            user_id=user_id
+            user_id=user_id,
+            movie_id=movie_id
         )
 
         db.add(db_rating)
@@ -146,15 +149,6 @@ class RatingCRUDService:
         db.refresh(db_rating)
         return db_rating
 
-    @staticmethod
-    def get_aggregate_ratings(db: Session):
-        return db.query(
-            models.Movie.id,
-            models.Movie.title,
-            func.avg(models.Rating.rating_value).label('average_rating'),
-            func.count(models.Rating.id).label('rating_count')
-        ).outerjoin(models.Rating, models.Movie.id == models.Rating.movie_id).group_by(models.Movie.id).all()
-    
     @staticmethod
     def get_ratings(db: Session, offset: int = 0, limit: int = 10):
         return db.query(models.Rating).offset(offset).limit(limit).all()
@@ -170,6 +164,30 @@ class RatingCRUDService:
     @staticmethod
     def get_ratings_by_movie_id(db: Session, movie_id: int, offset: int = 0, limit: int = 10):
         return db.query(models.Rating).filter(models.Rating.movie_id == movie_id).offset(offset).limit(limit).all()
+    
+    @staticmethod
+    def get_all_ratings_for_a_movie(db: Session, movie_id: int):
+        return db.query(models.Rating).filter(models.Rating.movie_id == movie_id).all()
+    
+    @staticmethod
+    def aggregate_rating(db: Session, movie_id: int):
+         # Fetch all ratings for the specified movie
+        ratings = rating_crud_service.get_all_ratings_for_a_movie(db, movie_id)
+        
+        # Check if there are any ratings
+        if not ratings:
+            return 0.0
+        
+        # Extract the ratings from the objects
+        rating_values = [rating.rating_value for rating in ratings]
+        
+        # Calculate the mean rating using statistics.mean
+        mean_rating = statistics.mean(rating_values)
+        
+        
+        return mean_rating
+
+
 
     @staticmethod
     def update_rating(db: Session, rating_payload: schemas.RatingUpdate, rating_id: int):
@@ -281,7 +299,7 @@ class CommentCRUDService:
         return comment_with_no_of_replies
 
     @staticmethod
-    def get_comment_by_user(db: Session, user_id: int, offset: int = 0, limit: int = 10):
+    def get_comments_by_user(db: Session, user_id: int, offset: int = 0, limit: int = 10):
         return db.query(models.Comment).filter(models.Comment.user_id == user_id).offset(offset).limit(limit).all()
 
     @staticmethod
