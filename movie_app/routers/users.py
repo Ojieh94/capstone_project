@@ -46,7 +46,7 @@ async def update_user(user_id: int, payload: schemas.UserUpdate, db: Session = D
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     if db_user.id != current_user.id:
-        logger.warning("User mot authorized....")
+        logger.warning("User not authorized....")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorized")
     user = user_crud_service.update_user(db, user_id, payload)

@@ -184,8 +184,9 @@ class RatingCRUDService:
         # Calculate the mean rating using statistics.mean
         mean_rating = statistics.mean(rating_values)
         
+        avg_rating = round(mean_rating, 2)
         
-        return mean_rating
+        return avg_rating
 
 
 
