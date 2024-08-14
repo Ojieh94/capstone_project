@@ -59,8 +59,8 @@ PostgreSQL
 1. **Clone the repository**:
 
    ```sh
-   git clone https://github.com/James0711/AltSchool-Capstone_Project.git
-   cd AltSchool-Capstone_Project
+   git clone https://github.com/Ojieh94/henry.git
+   cd Capstone_Project
    ``` 
 
 2. **Install the dependencies**:
@@ -79,7 +79,7 @@ SQLALCHEMY_DATABASE_URL=your_database_url  # Replace with your database URL
 4. **Start the application**:
 
     ```sh
-    uvicorn app.main:app --reload
+    uvicorn movie_app.main:app --reload
     ```
 
 ### Running Tests
