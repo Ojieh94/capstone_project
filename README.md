@@ -1,37 +1,107 @@
-# capstone_project
 # Movie Listing API
 
-## Project Overview
+The Movie Listing API is a comprehensive platform for managing movie listings, user interactions, and ratings. It provides functionality for listing movies, viewing details, and allows users to rate and comment on movies. The API is secured with JWT authentication and deployed on Render.
 
-This capstone project is designed to develop a movie listing API using FastAPI, SQL Alchemy and Python. The API allows users to list movies, view listed movies, rate them, and add comments. The application is secured using JWT (JSON Web Tokens), ensuring that only the user who listed a movie can edit it. The application is hosted on a cloud platform.
+## Technical Stack
+
+- **Language**: Python
+- **Framework**: FastAPI
+- **Database**: PostgreSQL
+- **Authentication**: JWT (JSON Web Tokens)
+- **ORM**: SQLAlchemy
+- **Password Hashing**: Passlib
+- **Cloud Platform**: Render
+- **Testing**: Pytest
+- **Documentation**: OpenAPI/Swagger
+- **Environment Variables**: python-dotenv
+
 
 ## Features
 
-### User Authentication:
-- **User Registration**: Users can sign up to access the API.
-- **User Login**: Users can log in to receive a JWT token.
-- **JWT Token Generation**: Secure endpoints with JWT for authentication.
+- **User Authentication:**
+Secure user login and registration with JWT to ensure authorized access.
+- **CRUD Operations:**
+Manage movies, users, ratings, and comments with full CRUD capabilities.
 
-### Movie Listing:
-- **View a Movie**: Public access to view movie details.
-- **Add a Movie**: Authenticated users can add movies.
-- **View All Movies**: Public access to view all listed movies.
-- **Edit a Movie**: Only the user who listed the movie can edit it.
-- **Delete a Movie**: Only the user who listed the movie can delete it.
+- **Movie Management:**
+ List, search, and view detailed information about movies.
 
-### Movie Rating:
-- **Rate a Movie**: Authenticated users can rate movies.
-- **Get Ratings for a Movie**: Public access to view movie ratings.
+- **Rating and Comments:**
+Users can rate movies and leave comments, enhancing interaction.
+- **Advanced Querying:**
+Support for filtering, pagination, and searching.
 
-### Comments:
-- **Add a Comment to a Movie**: Authenticated users can comment on movies.
-- **View Comments for a Movie**: Public access to view comments on movies.
-- **Add Comment to a Comment (Nested Comments)**: Authenticated users can reply to comments.
+- **Dependency Injection and Modularity:**
+Utilizes FastAPI’s dependency injection for a modular and maintainable codebase.
 
-## Requirements
+- **Robust Logging and Error Handling:**
+ The application employs comprehensive logging and error handling mechanisms to ensure reliable operation. Logs are managed and monitored using Better Stack.
 
-- **Language & Framework**: Python using FastAPI
-- **Authentication**: JWT for securing endpoints
-- **Database**: Any SQL or NoSQL database of your choice
-- **Testing**: Include unit tests for the API endpoints
-- **Documentation**: API documentation using OpenAPI/Swagger
+
+## Use Cases:
+
+- **Movie Listing Platforms:**  Build movie databases or discovery platforms.
+
+- **Review Aggregators:** Aggregate and manage movie ratings and reviews.
+
+- **Content Management Systems (CMS):** Integrate with media-related CMS platforms.
+
+## Getting Started
+
+### Prerequisites
+
+Python 3.12.1
+PostgreSQL
+
+
+### Installation
+
+1. **Clone the repository**:
+
+   ```sh
+   git clone https://github.com/James0711/AltSchool-Capstone_Project.git
+   cd AltSchool-Capstone_Project
+   ``` 
+
+2. **Install the dependencies**:
+
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+3. **Set up the database**: 
+
+Create a PostgreSQL database and configure the connection in the `.env` file.
+```
+SQLALCHEMY_DATABASE_URL=your_database_url  # Replace with your database URL
+```
+
+4. **Start the application**:
+
+    ```sh
+    uvicorn app.main:app --reload
+    ```
+
+### Running Tests
+
+To ensure the API functions correctly, we have implemented tests using `pytest`.
+
+1. **Install `pytest`**:
+
+   ```sh
+   pip install pytest
+   ```
+
+2. **Run the tests**:
+   ```sh
+   pytest
+   ```
+
+
+## Contributions
+
+Feel free to contribute and make changes! Please create a pull request with a detailed description of your changes
+
+## Contact
+
+[henry.ojieh@gmail.com](mailto:henry.ojieh@gmail.com).
